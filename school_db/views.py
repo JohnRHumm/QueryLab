@@ -1,3 +1,4 @@
+from ast import In
 from django.shortcuts import render
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
@@ -58,8 +59,10 @@ SELECT `school_db_student`.`id`,
 # Order the data by highest GPAs first (descending).
 # Print out each student's full name and gpa to the terminal
 def problem_one(request):
+    students = Student.objects.filter(gpa__gt=3.0).order_by('-gpa')
 
-
+    for student in students:
+      print(f'Full Name: {student.first_name} {student.last_name} GPA: {student.gpa}')
 
     return complete(request)
 
@@ -99,10 +102,13 @@ SELECT `school_db_student`.`id`,
 # Order by hire date ascending
 # Print out the instructor's full name and hire date to the terminal
 def problem_two(request):
+   instructors = Instructor.objects.filter(hire_date__year__lte=2010).order_by('hire_date')
+
+   for instructor in instructors:
+     print(f'Full Name: {instructor.first_name} {instructor.last_name}\nHire Date: {instructor.hire_date}\n')
 
 
-
-    return complete(request)
+   return complete(request)
 
 
 # Supporting Query Method Documentation:
@@ -139,10 +145,18 @@ SELECT `school_db_instructor`.`id`,
 # Print the instructors name and courses that he belongs to in the terminal 
 # (Do not hard code his name in the print)
 def problem_three(request):
+   courses = Course.objects.filter(instructor_id__exact = 2)
+   instructor = Instructor.objects.get(pk=2)
 
-
-
-    return complete(request)
+   print(f'Instructor Name: {instructor.first_name} {instructor.last_name}')
+   print('Courses:')
+   for course in courses:
+     print(f'\t- {course.name}')
+   
+  
+  
+  
+   return complete(request)
 
 
 # Supporting Query Method Documentation:
@@ -187,10 +201,16 @@ SELECT `school_db_instructor`.`id`,
 
 # Get the count of students, courses, and instructors and print them in the terminal
 def problem_four(request):
+   num_students = Student.objects.count()
+   num_instructors = Instructor.objects.count()
+   num_courses = Course.objects.count()
+
+   print(f'Students Count: {num_students}')
+   print(f'Courses Count: {num_courses}')
+   print(f'Instructors Count: {num_instructors}') 
 
 
-
-    return complete(request)
+   return complete(request)
 
 
 # Supporting Query Method Documentation:
